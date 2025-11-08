@@ -1,0 +1,356 @@
+# ============================================================================
+# .gitignore para ISSE_Termostato
+# Sistema de Control de Temperatura - Proyecto C para Sistemas Embebidos
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# CLion / JetBrains IDEs
+# ----------------------------------------------------------------------------
+.idea/
+cmake-build-*/
+*.iml
+.idea_modules/
+
+# User-specific
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# ----------------------------------------------------------------------------
+# CMake
+# ----------------------------------------------------------------------------
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Build directories
+build/
+Build/
+out/
+debug/
+release/
+
+# ----------------------------------------------------------------------------
+# C/C++ Compilation Artifacts
+# ----------------------------------------------------------------------------
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+*.bin
+*.elf
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# ----------------------------------------------------------------------------
+# Embedded Systems Specific
+# ----------------------------------------------------------------------------
+# Firmware binaries
+*.hex
+*.bin
+*.elf
+*.axf
+*.map
+*.lst
+*.lss
+*.sym
+*.srec
+*.ihex
+
+# Keil µVision
+*.uvproj
+*.uvopt
+*.uvgui.*
+*.bak
+
+# IAR Embedded Workbench
+*.eww
+*.dep
+*.dni
+*.wsdt
+*.pbd
+*.browse
+
+# Eclipse / CDT
+.cproject
+.project
+.settings/
+
+# STM32CubeIDE
+.metadata/
+.recommenders/
+
+# ----------------------------------------------------------------------------
+# Testing
+# ----------------------------------------------------------------------------
+# Unity Test Framework
+test_results/
+test_reports/
+*.testlog
+
+# Code coverage
+*.gcov
+*.gcda
+*.gcno
+coverage/
+htmlcov/
+
+# Valgrind
+*.valgrind
+vgcore.*
+
+# ----------------------------------------------------------------------------
+# Documentation
+# ----------------------------------------------------------------------------
+# Doxygen generated
+docs/doxygen/html/
+docs/doxygen/latex/
+docs/doxygen/xml/
+docs/generated/
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# ----------------------------------------------------------------------------
+# Logs y Archivos de Runtime del Sistema Termostato
+# ----------------------------------------------------------------------------
+# Logs de errores y auditoría
+registro_errores
+registro_auditoria
+*.log
+*.log.*
+
+# Archivos de datos temporales
+datos_temperatura.txt
+estado_climatizador.txt
+nivel_bateria.txt
+
+# Archivos de configuración local (runtime)
+config/local_config.json
+config/*.local.json
+
+# Archivos de simulación
+simulador_*.txt
+sim_output/
+
+# ----------------------------------------------------------------------------
+# Sistema Operativo
+# ----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ----------------------------------------------------------------------------
+# Editores de Texto
+# ----------------------------------------------------------------------------
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ----------------------------------------------------------------------------
+# Herramientas de Desarrollo
+# ----------------------------------------------------------------------------
+# Tags
+tags
+TAGS
+.tags
+.tags1
+gtags.files
+GTAGS
+GRTAGS
+GSYMS
+GPATH
+
+# Ctags
+.ctags
+
+# Cscope
+cscope.out
+cscope.in.out
+cscope.po.out
+cscope.files
+
+# ----------------------------------------------------------------------------
+# Backup y Temporales
+# ----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+*.old
+
+# ----------------------------------------------------------------------------
+# Configuración Personal / Sensible
+# ----------------------------------------------------------------------------
+# API keys y secrets
+.env
+.env.local
+secrets.h
+secrets.c
+api_keys.h
+
+# Configuración local de usuario
+user_config.json
+local_settings.h
+
+# ----------------------------------------------------------------------------
+# Archivos Grandes / Binarios
+# ----------------------------------------------------------------------------
+# Imágenes de firmware grandes
+*.img
+*.iso
+
+# Archivos de datos grandes
+*.csv
+*.dat
+*.data
+
+# ----------------------------------------------------------------------------
+# Python (para scripts de simulación/testing)
+# ----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# ----------------------------------------------------------------------------
+# Node.js (si usas herramientas JS para documentación)
+# ----------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ----------------------------------------------------------------------------
+# Misceláneos
+# ----------------------------------------------------------------------------
+# Archivos comprimidos
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Notas personales
+NOTES.md
+TODO.txt
+PERSONAL.md
+
+# ============================================================================
+# FIN DEL .gitignore
+# ============================================================================
