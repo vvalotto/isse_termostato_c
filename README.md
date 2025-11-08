@@ -140,7 +140,7 @@ El sistema cumple con **17 escenarios de calidad** priorizados:
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/vvalotto/ISSE_Termostato.git
+git clone https://github.com/vvalotto/isse_termostato_c.git
 cd ISSE_Termostato
 
 # Abrir con CLion
