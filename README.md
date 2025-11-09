@@ -141,7 +141,7 @@ El sistema cumple con **17 escenarios de calidad** priorizados:
 ```bash
 # Clonar el repositorio
 git clone https://github.com/vvalotto/isse_termostato_c.git
-cd ISSE_Termostato
+cd isse_termostato_c
 
 # Abrir con CLion
 # File → Open → Seleccionar carpeta del proyecto
@@ -195,7 +195,7 @@ ctest --verbose
 ## 📁 Estructura del Proyecto
 
 ```
-ISSE_Termostato/
+isse_termostato_c/
 ├── docs/                   # Documentación completa
 │   ├── arquitectura/       # Arquitectura funcional por capas
 │   ├── casos_uso/          # Especificación de casos de uso
@@ -369,8 +369,8 @@ Este proyecto es material académico. Ver [LICENSE](LICENSE) para más detalles.
 
 **⭐ Si este proyecto te resulta útil, considerá darle una estrella en GitHub ⭐**
 
-[Reportar Bug](https://github.com/vvalotto/ISSE_Termostato/issues) • 
-[Solicitar Feature](https://github.com/vvalotto/ISSE_Termostato/issues) • 
+[Reportar Bug](https://github.com/vvalotto/isse_termostato_c/issues) •
+[Solicitar Feature](https://github.com/vvalotto/isse_termostato_c/issues) •
 [Ver Documentación](docs/)
 
 </div>

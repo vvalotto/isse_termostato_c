@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.20)
 # ------------------------------------------------------------------------------
 # Información del Proyecto
 # ------------------------------------------------------------------------------
-project(ISSE_Termostato 
+project(isse_termostato_c
     VERSION 1.0.0
     DESCRIPTION "Sistema embebido de control de temperatura con arquitectura por capas"
     LANGUAGES C
