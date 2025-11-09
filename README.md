@@ -84,7 +84,7 @@ El sistema implementa una **arquitectura funcional por capas** con 5 niveles de 
 - ✅ Testabilidad mediante inyección de dependencias
 - ✅ Portabilidad (cambio de hardware afecta solo capas inferiores)
 
-📚 **Documentación completa:** [docs/arquitectura/Arquitectura_Funcional.pdf](docs/arquitectura)
+📚 **Documentación completa:** [docs/arquitectura/](docs/arquitectura) (en desarrollo)
 
 ---
 
@@ -122,7 +122,7 @@ El sistema cumple con **17 escenarios de calidad** priorizados:
 | **Observabilidad** | 1 | Diagnóstico remoto sin acceso físico |
 | **Otros** | 3 | Capacidad, Integridad, Determinismo temporal |
 
-🎭 **Matriz de trazabilidad:** [docs/escenarios_calidad/Matriz_Trazabilidad.docx](docs/escenarios_calidad)
+🎭 **Matriz de trazabilidad:** [docs/escenarios_calidad/](docs/escenarios_calidad) (en desarrollo)
 
 ---
 
@@ -262,16 +262,28 @@ ctest -R test_ciclo_control
 
 ### Jira
 Las historias de usuario y tareas están gestionadas en:
-- **Proyecto Jira:** [Link a tu proyecto Jira]
-- **Convención de branches:** `feature/ISSE-XXX-descripcion`
-- **Convención de commits:** `[ISSE-XXX] Descripción del commit`
+- **Proyecto Jira:** [ITE - ISSE Termostato](https://vvalotto.atlassian.net/jira/software/projects/ITE/boards/2)
+- **Board:** Kanban Board
+- **Convención de branches:** `feature/ITE-XXX-descripcion`
+- **Convención de commits:** `[ITE-XXX] Descripción del commit`
+
+### Confluence
+La documentación completa del proyecto está centralizada en:
+- **Espacio de Trabajo:** [Ingeniería de Software para Sistemas Embebidos (I2A)](https://vvalotto.atlassian.net/wiki/spaces/I2A/overview)
+- **Contenido:**
+  - Arquitectura funcional detallada
+  - Especificaciones de casos de uso
+  - Escenarios de calidad y métricas
+  - Diagramas C4 y UML
+  - Historias de usuario y criterios de aceptación
+  - Matriz de trazabilidad
 
 ### GitHub Issues
-Usamos issues para:
-- 🐛 Bugs detectados
-- ✨ Features adicionales
-- 📚 Mejoras de documentación
-- ❓ Preguntas técnicas
+Usamos GitHub Issues como complemento para:
+- 🐛 Bugs técnicos de implementación
+- ✨ Mejoras de código
+- 📚 Actualizaciones de README/CLAUDE.md
+- ❓ Preguntas sobre el repositorio
 
 ### Contribución
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guía de contribución.
@@ -280,14 +292,14 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guía de contribución.
 
 ## 📚 Documentación Adicional
 
-| Documento | Descripción |
-|-----------|-------------|
-| [Arquitectura Funcional](docs/arquitectura/Arquitectura_Funcional.pdf) | Descripción completa de las 5 capas + aspectos |
-| [Casos de Uso](docs/casos_uso/Modelado_Casos_de_Uso.pdf) | 8 casos de uso con especificación detallada |
-| [Escenarios de Calidad](docs/escenarios_calidad/Escenarios_de_Calidad.pdf) | 17 escenarios con métricas medibles |
-| [Diagramas C4](docs/diagramas/C4.docx) | Contexto, Contenedores, Componentes, Código |
-| [Historias de Usuario](docs/casos_uso/Casos_de_Uso_y_sus_Historias_de_Usuario__Sistema_Termostato.pdf) | 15 HU mapeadas a casos de uso |
-| [Matriz de Trazabilidad](docs/escenarios_calidad/Matriz_de_Trazabilidad_Simplificada.docx) | Trazabilidad CU ↔ Escenarios |
+| Documento | Descripción | Estado |
+|-----------|-------------|--------|
+| [Arquitectura Funcional](docs/arquitectura/) | Descripción completa de las 5 capas + aspectos | 📝 En desarrollo |
+| [Casos de Uso](docs/casos_uso/) | 8 casos de uso con especificación detallada | 📝 En desarrollo |
+| [Escenarios de Calidad](docs/escenarios_calidad/) | 17 escenarios con métricas medibles | 📝 En desarrollo |
+| [Diagramas C4](docs/diagramas/) | Contexto, Contenedores, Componentes, Código | 📝 En desarrollo |
+| [Historias de Usuario](docs/casos_uso/) | 15 HU mapeadas a casos de uso | 📝 En desarrollo |
+| [Matriz de Trazabilidad](docs/escenarios_calidad/) | Trazabilidad CU ↔ Escenarios | 📝 En desarrollo |
 
 ---
 
@@ -335,8 +347,8 @@ Este proyecto es material académico. Ver [LICENSE](LICENSE) para más detalles.
 
 **Victor Valotto**
 - 🏫 Docente Universitario - FIUNER
-- 📧 Email: [tu email]
-- 🔗 LinkedIn: [tu perfil]
+- 📧 Email: victor.valotto@uner.edu.ar
+- 🔗 LinkedIn: [linkedin.com/in/vvalotto](https://linkedin.com/in/vvalotto)
 - 🌐 GitHub: [@vvalotto](https://github.com/vvalotto)
 
 ---

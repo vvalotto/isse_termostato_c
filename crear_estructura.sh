@@ -103,8 +103,23 @@ echo ""
 # ASPECTOS TRANSVERSALES
 # ==============================================================================
 echo "🔀 Aspectos Transversales"
-create_dir "src/aspectos"
-create_gitkeep "src/aspectos"
+create_dir "src/aspectos/logging"
+create_gitkeep "src/aspectos/logging"
+
+create_dir "src/aspectos/auditoria"
+create_gitkeep "src/aspectos/auditoria"
+
+create_dir "src/aspectos/configuracion"
+create_gitkeep "src/aspectos/configuracion"
+
+create_dir "src/aspectos/eventos"
+create_gitkeep "src/aspectos/eventos"
+
+create_dir "src/aspectos/persistencia"
+create_gitkeep "src/aspectos/persistencia"
+
+create_dir "src/aspectos/validacion"
+create_gitkeep "src/aspectos/validacion"
 echo ""
 
 # ==============================================================================
@@ -195,7 +210,7 @@ echo "    ├── aplicacion/    (gestores, servicios)"
 echo "    ├── dominio/       (entidades, servicios)"
 echo "    ├── infraestructura/ (sensores, actuadores, visualizadores)"
 echo "    ├── dispositivos/  (hal, drivers)"
-echo "    ├── aspectos/"
+echo "    ├── aspectos/      (logging, auditoria, configuracion, eventos, persistencia, validacion)"
 echo "    └── common/"
 echo ""
 echo "  test/"
