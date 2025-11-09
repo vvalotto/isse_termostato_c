@@ -1,4 +1,4 @@
- ==============================================================================
+# ==============================================================================
 # CMakeLists.txt - ISSE Termostato
 # Sistema de Control de Temperatura - Arquitectura por Capas
 # ==============================================================================
@@ -134,27 +134,38 @@ include_directories(
 # ------------------------------------------------------------------------------
 
 # Capa de Dominio (Lógica de Negocio)
-set(DOMINIO_SOURCES
+file(GLOB_RECURSE DOMINIO_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/dominio/entidades/*.c
+    ${CMAKE_SOURCE_DIR}/src/dominio/servicios/*.c
 )
 
 # Capa de Aplicación (Orquestación)
-set(APLICACION_SOURCES
+file(GLOB_RECURSE APLICACION_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/aplicacion/gestores/*.c
+    ${CMAKE_SOURCE_DIR}/src/aplicacion/servicios/*.c
 )
 
 # Capa de Infraestructura (Acceso a Recursos)
-set(INFRAESTRUCTURA_SOURCES
+file(GLOB_RECURSE INFRAESTRUCTURA_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/infraestructura/sensores/*.c
+    ${CMAKE_SOURCE_DIR}/src/infraestructura/actuadores/*.c
+    ${CMAKE_SOURCE_DIR}/src/infraestructura/visualizadores/*.c
 )
 
 # Capa de Dispositivos (HAL y Drivers)
-set(DISPOSITIVOS_SOURCES
+file(GLOB_RECURSE DISPOSITIVOS_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/dispositivos/hal/*.c
+    ${CMAKE_SOURCE_DIR}/src/dispositivos/drivers/*.c
 )
 
 # Aspectos Transversales
-set(ASPECTOS_SOURCES
+file(GLOB_RECURSE ASPECTOS_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/aspectos/*/*.c
 )
 
 # Common
-set(COMMON_SOURCES
+file(GLOB_RECURSE COMMON_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/common/*.c
 )
 
 # ------------------------------------------------------------------------------
@@ -233,7 +244,10 @@ if(BUILD_TESTS)
     
     # Habilitar CTest
     enable_testing()
-    
+
+    # Test de Ejemplo (verificar que Unity funciona)
+    add_unit_test(test_ejemplo test/unit/test_ejemplo.c)
+
     # Tests de Dominio
     
     # Tests de Aplicación
