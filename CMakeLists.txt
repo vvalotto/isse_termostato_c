@@ -249,11 +249,20 @@ if(BUILD_TESTS)
     add_unit_test(test_ejemplo test/unit/test_ejemplo.c)
 
     # Tests de Dominio
-    
+    add_unit_test(test_ambiente test/unit/test_ambiente.c)
+
+    # Tests de Dispositivos (HAL)
+    add_unit_test(test_hal_adc test/unit/test_hal_adc.c)
+
+    # Tests de Infraestructura
+    add_unit_test(test_sensor_temperatura test/unit/test_sensor_temperatura.c)
+
     # Tests de Aplicación
-    
+    add_unit_test(test_gestor_termostato test/unit/test_gestor_termostato.c)
+
     # Tests de Integración
-    
+    add_unit_test(test_lectura_temperatura_completa test/integration/test_lectura_temperatura_completa.c)
+
 endif()
 
 # ------------------------------------------------------------------------------
