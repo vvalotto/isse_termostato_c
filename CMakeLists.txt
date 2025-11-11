@@ -249,7 +249,8 @@ if(BUILD_TESTS)
     add_unit_test(test_ejemplo test/unit/test_ejemplo.c)
 
     # Tests de Dominio
-    
+    add_unit_test(test_ambiente test/unit/test_ambiente.c)
+
     # Tests de Aplicación
     
     # Tests de Integración
