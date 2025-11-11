@@ -261,7 +261,8 @@ if(BUILD_TESTS)
     add_unit_test(test_gestor_termostato test/unit/test_gestor_termostato.c)
 
     # Tests de Integración
-    
+    add_unit_test(test_lectura_temperatura_completa test/integration/test_lectura_temperatura_completa.c)
+
 endif()
 
 # ------------------------------------------------------------------------------
