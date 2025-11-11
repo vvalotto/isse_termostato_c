@@ -2,11 +2,13 @@
  * @file main.c
  * @brief Punto de entrada del Sistema Termostato ISSE
  * @version 1.0.0
- * @date 2025-11-09
+ * @date 2025-11-10
  *
  * Sistema embebido de control de temperatura con arquitectura por capas.
  * Implementa control automático de climatización residencial mediante
  * sensores de temperatura y actuadores de calefacción/refrigeración.
+ *
+ * Versión actual: Implementa HU-014 (Obtener temperatura ambiente)
  *
  * @author Victor Valotto
  * @copyright Universidad Nacional de Entre Ríos (FIUNER)
@@ -15,26 +17,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef TARGET_SIMULATOR
+#include <unistd.h>  // Para usleep() en simulador
+#endif
+
 // TODO: Incluir headers de aspectos transversales cuando estén disponibles
 // #include "logging.h"
 // #include "configuracion.h"
 // #include "auditoria.h"
 
-// TODO: Incluir headers de capa de aplicación cuando estén disponibles
-// #include "gestor_termostato.h"
+// Capa de Aplicación
+#include "gestor_termostato.h"
 
-// TODO: Incluir headers de capa de dominio cuando estén disponibles
-// #include "entidad_ambiente.h"
-// #include "entidad_bateria.h"
-// #include "entidad_climatizador.h"
+// Capa de Dominio
+#include "ambiente.h"
 
-// TODO: Incluir headers de capa de infraestructura cuando estén disponibles
-// #include "proxy_sensor_temperatura.h"
+// TODO: Incluir cuando estén disponibles
+// #include "bateria.h"
+// #include "climatizador.h"
+
+// Capa de Infraestructura
+#include "sensor_temperatura.h"
+
+// TODO: Incluir cuando estén disponibles
 // #include "actuador_climatizador.h"
 
-// TODO: Incluir headers de capa de dispositivos cuando estén disponibles
+// Capa de Dispositivos
+#include "hal_adc.h"
+
+// TODO: Incluir cuando estén disponibles
 // #include "hal_gpio.h"
-// #include "hal_adc.h"
 
 /**
  * @brief Función principal del sistema
@@ -94,26 +106,18 @@ int main(void) {
     // }
     // printf("  ✓ GPIO inicializado\n");
 
-    // TODO: Inicializar HAL ADC para lectura de sensores
-    // if (hal_adc_init() != 0) {
-    //     fprintf(stderr, "[ERROR] Fallo al inicializar ADC\n");
-    //     return EXIT_FAILURE;
-    // }
-    // printf("  ✓ ADC inicializado\n");
-
-    printf("  (HAL: pendiente de implementación)\n\n");
+    // Inicializar HAL ADC para lectura de sensores
+    hal_adc_init();
+    printf("  ✓ ADC inicializado (simulador)\n\n");
 
     // -------------------------------------------------------------------------
     // FASE 3: Inicialización de Capa de Infraestructura
     // -------------------------------------------------------------------------
     printf("[ INIT ] Inicializando capa de infraestructura...\n");
 
-    // TODO: Inicializar proxy de sensor de temperatura
-    // if (proxy_sensor_temp_init() != 0) {
-    //     fprintf(stderr, "[ERROR] Fallo al inicializar sensor de temperatura\n");
-    //     return EXIT_FAILURE;
-    // }
-    // printf("  ✓ Sensor de temperatura inicializado\n");
+    // Inicializar proxy de sensor de temperatura
+    sensor_temperatura_init();
+    printf("  ✓ Sensor de temperatura inicializado\n");
 
     // TODO: Inicializar actuador de climatizador
     // if (actuador_climatizador_init() != 0) {
@@ -122,16 +126,22 @@ int main(void) {
     // }
     // printf("  ✓ Climatizador inicializado\n");
 
-    printf("  (Infraestructura: pendiente de implementación)\n\n");
+    printf("\n");
 
     // -------------------------------------------------------------------------
     // FASE 4: Inicialización de Capa de Dominio
     // -------------------------------------------------------------------------
     printf("[ INIT ] Inicializando capa de dominio...\n");
 
-    // TODO: Crear entidad Ambiente con temperatura inicial
-    // Ambiente* ambiente = ambiente_crear(20.0f);
-    // printf("  ✓ Entidad Ambiente creada (temp inicial: 20.0°C)\n");
+    // Crear entidad Ambiente con temperatura inicial
+    Ambiente* ambiente = ambiente_crear();
+    if (ambiente == NULL) {
+        fprintf(stderr, "[ERROR] Fallo al crear entidad Ambiente\n");
+        sensor_temperatura_deinit();
+        hal_adc_deinit();
+        return EXIT_FAILURE;
+    }
+    printf("  ✓ Entidad Ambiente creada (temp inicial: %.1f°C)\n", TEMP_INICIAL_DEFAULT);
 
     // TODO: Crear entidad Batería con carga inicial
     // Bateria* bateria = bateria_crear(100.0f);
@@ -141,30 +151,53 @@ int main(void) {
     // Climatizador* climatizador = climatizador_crear();
     // printf("  ✓ Entidad Climatizador creada (estado: APAGADO)\n");
 
-    printf("  (Dominio: pendiente de implementación)\n\n");
+    printf("\n");
 
     // -------------------------------------------------------------------------
     // FASE 5: Inicialización de Capa de Aplicación
     // -------------------------------------------------------------------------
     printf("[ INIT ] Inicializando capa de aplicación...\n");
 
-    // TODO: Crear gestor de termostato (orquestador principal)
-    // GestorTermostato* gestor = gestor_termostato_crear(ambiente, bateria, climatizador);
-    // if (gestor == NULL) {
-    //     fprintf(stderr, "[ERROR] Fallo al crear gestor de termostato\n");
-    //     return EXIT_FAILURE;
-    // }
-    // printf("  ✓ Gestor de Termostato creado\n");
-
-    printf("  (Aplicación: pendiente de implementación)\n\n");
+    // Crear gestor de termostato (orquestador principal)
+    GestorTermostato* gestor = gestor_termostato_crear(ambiente);
+    if (gestor == NULL) {
+        fprintf(stderr, "[ERROR] Fallo al crear gestor de termostato\n");
+        ambiente_destruir(ambiente);
+        sensor_temperatura_deinit();
+        hal_adc_deinit();
+        return EXIT_FAILURE;
+    }
+    printf("  ✓ Gestor de Termostato creado\n\n");
 
     // -------------------------------------------------------------------------
-    // FASE 6: Ciclo Principal de Control
+    // FASE 6: Demostración de HU-014 (Obtener Temperatura Ambiente)
     // -------------------------------------------------------------------------
     printf("[ READY ] Sistema inicializado correctamente\n");
-    printf("[ INFO  ] Iniciando ciclo de control...\n\n");
+    printf("[ INFO  ] Demostrando HU-014: Obtener temperatura ambiente\n\n");
 
-    // TODO: Implementar ciclo principal de control
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("  Lectura de Temperatura Ambiente (5 muestras)\n");
+    printf("═══════════════════════════════════════════════════════════════\n\n");
+
+    // Demostración: Leer temperatura 5 veces con intervalo de 500ms
+    for (int i = 1; i <= 5; i++) {
+        // CU-006: Obtener la temperatura ambiente
+        gestor_termostato_actualizar_temperatura(gestor);
+        Temperatura temp = gestor_termostato_obtener_temperatura_actual(gestor);
+
+        printf("  Lectura #%d: %.2f °C\n", i, temp);
+
+        // Esperar 500ms entre lecturas (en simulador)
+        #ifdef TARGET_SIMULATOR
+        usleep(500000);  // 500ms = 500,000 microsegundos
+        #endif
+    }
+
+    printf("\n═══════════════════════════════════════════════════════════════\n");
+    printf("  HU-014 completado exitosamente\n");
+    printf("═══════════════════════════════════════════════════════════════\n\n");
+
+    // TODO: Implementar ciclo de control completo para futuras historias
     // while (1) {
     //     // CU-004: Controlar Termostato (cada 100ms)
     //     gestor_termostato_ejecutar_ciclo(gestor);
@@ -176,41 +209,51 @@ int main(void) {
     //     hal_delay_ms(100);
     // }
 
-    printf("═══════════════════════════════════════════════════════════════\n");
-    printf("  Sistema ejecutándose (modo simulación)\n");
-    printf("  Presione Ctrl+C para detener\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
-
-    // Simulación temporal hasta implementar el ciclo real
-    printf("\n[ TODO  ] Implementar ciclo de control principal\n");
-    printf("[ TODO  ] Implementar casos de uso CU-001 a CU-008\n");
-    printf("[ TODO  ] Implementar máquina de estados del termostato\n\n");
+    printf("[ INFO  ] Pendientes de implementación:\n");
+    printf("  - CU-001 a CU-005: Control del termostato\n");
+    printf("  - CU-007: Verificación de batería\n");
+    printf("  - CU-008: Visualización de estado\n");
+    printf("  - Máquina de estados del termostato\n\n");
 
     // -------------------------------------------------------------------------
     // FASE 7: Limpieza y Finalización
     // -------------------------------------------------------------------------
-    // TODO: Liberar recursos de capa de aplicación
-    // gestor_termostato_destruir(gestor);
+    printf("[ EXIT  ] Finalizando sistema...\n");
 
-    // TODO: Liberar recursos de capa de dominio
-    // ambiente_destruir(ambiente);
+    // Liberar recursos de capa de aplicación
+    gestor_termostato_destruir(gestor);
+    printf("  ✓ Gestor de Termostato destruido\n");
+
+    // Liberar recursos de capa de dominio
+    ambiente_destruir(ambiente);
+    printf("  ✓ Entidad Ambiente destruida\n");
+
+    // TODO: Liberar cuando estén disponibles
     // bateria_destruir(bateria);
     // climatizador_destruir(climatizador);
 
-    // TODO: Desinicializar capa de infraestructura
-    // proxy_sensor_temp_deinit();
+    // Desinicializar capa de infraestructura
+    sensor_temperatura_deinit();
+    printf("  ✓ Sensor de temperatura desinicializado\n");
+
+    // TODO: Desinicializar cuando estén disponibles
     // actuador_climatizador_deinit();
 
-    // TODO: Desinicializar capa de dispositivos
-    // hal_adc_deinit();
+    // Desinicializar capa de dispositivos
+    hal_adc_deinit();
+    printf("  ✓ ADC desinicializado\n");
+
+    // TODO: Desinicializar cuando estén disponibles
     // hal_gpio_deinit();
 
-    // TODO: Desinicializar aspectos transversales
+    // TODO: Desinicializar aspectos transversales cuando estén disponibles
     // auditoria_deinit();
     // configuracion_deinit();
     // logging_deinit();
 
-    printf("\n[ EXIT  ] Sistema finalizado correctamente\n");
+    printf("\n═══════════════════════════════════════════════════════════════\n");
+    printf("  Sistema finalizado correctamente\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
 
     return EXIT_SUCCESS;
 }
