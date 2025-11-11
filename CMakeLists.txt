@@ -258,6 +258,7 @@ if(BUILD_TESTS)
     add_unit_test(test_sensor_temperatura test/unit/test_sensor_temperatura.c)
 
     # Tests de Aplicación
+    add_unit_test(test_gestor_termostato test/unit/test_gestor_termostato.c)
 
     # Tests de Integración
     
