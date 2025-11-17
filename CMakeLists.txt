@@ -265,6 +265,7 @@ if(BUILD_TESTS)
 
     # Tests de Integración
     add_unit_test(test_lectura_temperatura_completa test/integration/test_lectura_temperatura_completa.c)
+    add_unit_test(test_lectura_bateria_completa test/integration/test_lectura_bateria_completa.c)
 
 endif()
 
