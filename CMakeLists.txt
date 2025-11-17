@@ -250,18 +250,22 @@ if(BUILD_TESTS)
 
     # Tests de Dominio
     add_unit_test(test_ambiente test/unit/test_ambiente.c)
+    add_unit_test(test_bateria test/unit/test_bateria.c)
 
     # Tests de Dispositivos (HAL)
     add_unit_test(test_hal_adc test/unit/test_hal_adc.c)
+    add_unit_test(test_hal_bateria test/unit/test_hal_bateria.c)
 
     # Tests de Infraestructura
     add_unit_test(test_sensor_temperatura test/unit/test_sensor_temperatura.c)
+    add_unit_test(test_sensor_bateria test/unit/test_sensor_bateria.c)
 
     # Tests de Aplicación
     add_unit_test(test_gestor_termostato test/unit/test_gestor_termostato.c)
 
     # Tests de Integración
     add_unit_test(test_lectura_temperatura_completa test/integration/test_lectura_temperatura_completa.c)
+    add_unit_test(test_lectura_bateria_completa test/integration/test_lectura_bateria_completa.c)
 
 endif()
 

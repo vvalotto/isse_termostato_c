@@ -1,14 +1,16 @@
 /**
  * @file main.c
  * @brief Punto de entrada del Sistema Termostato ISSE
- * @version 1.0.0
- * @date 2025-11-10
+ * @version 1.1.0
+ * @date 2025-11-17
  *
  * Sistema embebido de control de temperatura con arquitectura por capas.
  * Implementa control automático de climatización residencial mediante
  * sensores de temperatura y actuadores de calefacción/refrigeración.
  *
- * Versión actual: Implementa HU-014 (Obtener temperatura ambiente)
+ * Versión actual: Implementa HU-014 y HU-007
+ * - HU-014: Obtener temperatura ambiente
+ * - HU-007: Obtener nivel de carga de la batería
  *
  * @author Victor Valotto
  * @copyright Universidad Nacional de Entre Ríos (FIUNER)
@@ -31,19 +33,21 @@
 
 // Capa de Dominio
 #include "ambiente.h"
+#include "bateria.h"
 
 // TODO: Incluir cuando estén disponibles
-// #include "bateria.h"
 // #include "climatizador.h"
 
 // Capa de Infraestructura
 #include "sensor_temperatura.h"
+#include "sensor_bateria.h"
 
 // TODO: Incluir cuando estén disponibles
 // #include "actuador_climatizador.h"
 
 // Capa de Dispositivos
 #include "hal_adc.h"
+#include "hal_bateria.h"
 
 // TODO: Incluir cuando estén disponibles
 // #include "hal_gpio.h"
@@ -108,7 +112,11 @@ int main(void) {
 
     // Inicializar HAL ADC para lectura de sensores
     hal_adc_init();
-    printf("  ✓ ADC inicializado (simulador)\n\n");
+    printf("  ✓ ADC inicializado (simulador)\n");
+
+    // Inicializar HAL Batería para monitoreo de energía
+    hal_bateria_init();
+    printf("  ✓ Batería HAL inicializado (simulador)\n\n");
 
     // -------------------------------------------------------------------------
     // FASE 3: Inicialización de Capa de Infraestructura
@@ -118,6 +126,10 @@ int main(void) {
     // Inicializar proxy de sensor de temperatura
     sensor_temperatura_init();
     printf("  ✓ Sensor de temperatura inicializado\n");
+
+    // Inicializar proxy de sensor de batería
+    sensor_bateria_init();
+    printf("  ✓ Sensor de batería inicializado\n");
 
     // TODO: Inicializar actuador de climatizador
     // if (actuador_climatizador_init() != 0) {
@@ -143,9 +155,16 @@ int main(void) {
     }
     printf("  ✓ Entidad Ambiente creada (temp inicial: %.1f°C)\n", TEMP_INICIAL_DEFAULT);
 
-    // TODO: Crear entidad Batería con carga inicial
-    // Bateria* bateria = bateria_crear(100.0f);
-    // printf("  ✓ Entidad Batería creada (carga inicial: 100%%)\n");
+    // Crear entidad Batería con carga inicial
+    Bateria* bateria = bateria_crear();
+    if (bateria == NULL) {
+        fprintf(stderr, "[ERROR] Fallo al crear entidad Bateria\n");
+        ambiente_destruir(ambiente);
+        sensor_temperatura_deinit();
+        hal_adc_deinit();
+        return EXIT_FAILURE;
+    }
+    printf("  ✓ Entidad Bateria creada (nivel inicial: %u%%)\n", bateria_obtener_nivel(bateria));
 
     // TODO: Crear entidad Climatizador en estado apagado
     // Climatizador* climatizador = climatizador_crear();
@@ -159,9 +178,10 @@ int main(void) {
     printf("[ INIT ] Inicializando capa de aplicación...\n");
 
     // Crear gestor de termostato (orquestador principal)
-    GestorTermostato* gestor = gestor_termostato_crear(ambiente);
+    GestorTermostato* gestor = gestor_termostato_crear(ambiente, bateria);
     if (gestor == NULL) {
         fprintf(stderr, "[ERROR] Fallo al crear gestor de termostato\n");
+        bateria_destruir(bateria);
         ambiente_destruir(ambiente);
         sensor_temperatura_deinit();
         hal_adc_deinit();
@@ -197,6 +217,51 @@ int main(void) {
     printf("  HU-014 completado exitosamente\n");
     printf("═══════════════════════════════════════════════════════════════\n\n");
 
+    // -------------------------------------------------------------------------
+    // FASE 6.5: Demostración de HU-007 (Obtener Nivel de Carga de Batería)
+    // -------------------------------------------------------------------------
+    printf("[ INFO  ] Demostrando HU-007: Obtener nivel de carga de batería\n\n");
+
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("  Monitoreo de Batería (5 muestras)\n");
+    printf("═══════════════════════════════════════════════════════════════\n\n");
+
+    // Demostración: Leer batería 5 veces con intervalo de 500ms
+    for (int i = 1; i <= 5; i++) {
+        // CU-007: Verificar nivel de batería
+        gestor_termostato_actualizar_bateria(gestor);
+        NivelCarga nivel = gestor_termostato_obtener_nivel_bateria(gestor);
+        EstadoBateria estado = gestor_termostato_obtener_estado_bateria(gestor);
+
+        // Determinar símbolo según estado
+        const char* simbolo_estado = "✓";
+        if (estado == BATERIA_ESTADO_BAJO) {
+            simbolo_estado = "⚠";
+        } else if (estado == BATERIA_ESTADO_CRITICO) {
+            simbolo_estado = "✗";
+        }
+
+        // Determinar nombre del estado
+        const char* nombre_estado = "NORMAL";
+        if (estado == BATERIA_ESTADO_BAJO) {
+            nombre_estado = "BAJO";
+        } else if (estado == BATERIA_ESTADO_CRITICO) {
+            nombre_estado = "CRITICO";
+        }
+
+        printf("  Lectura #%d: %3u%% [%s] Estado: %s\n",
+               i, nivel, simbolo_estado, nombre_estado);
+
+        // Esperar 500ms entre lecturas (en simulador)
+        #ifdef TARGET_SIMULATOR
+        usleep(500000);  // 500ms = 500,000 microsegundos
+        #endif
+    }
+
+    printf("\n═══════════════════════════════════════════════════════════════\n");
+    printf("  HU-007 completado exitosamente\n");
+    printf("═══════════════════════════════════════════════════════════════\n\n");
+
     // TODO: Implementar ciclo de control completo para futuras historias
     // while (1) {
     //     // CU-004: Controlar Termostato (cada 100ms)
@@ -209,9 +274,12 @@ int main(void) {
     //     hal_delay_ms(100);
     // }
 
+    printf("[ INFO  ] Funcionalidades implementadas:\n");
+    printf("  ✓ CU-006: Obtener temperatura ambiente (HU-014)\n");
+    printf("  ✓ CU-007: Verificar nivel de batería (HU-007)\n\n");
+
     printf("[ INFO  ] Pendientes de implementación:\n");
     printf("  - CU-001 a CU-005: Control del termostato\n");
-    printf("  - CU-007: Verificación de batería\n");
     printf("  - CU-008: Visualización de estado\n");
     printf("  - Máquina de estados del termostato\n\n");
 
@@ -228,13 +296,18 @@ int main(void) {
     ambiente_destruir(ambiente);
     printf("  ✓ Entidad Ambiente destruida\n");
 
+    bateria_destruir(bateria);
+    printf("  ✓ Entidad Bateria destruida\n");
+
     // TODO: Liberar cuando estén disponibles
-    // bateria_destruir(bateria);
     // climatizador_destruir(climatizador);
 
     // Desinicializar capa de infraestructura
     sensor_temperatura_deinit();
     printf("  ✓ Sensor de temperatura desinicializado\n");
+
+    sensor_bateria_deinit();
+    printf("  ✓ Sensor de batería desinicializado\n");
 
     // TODO: Desinicializar cuando estén disponibles
     // actuador_climatizador_deinit();
@@ -242,6 +315,9 @@ int main(void) {
     // Desinicializar capa de dispositivos
     hal_adc_deinit();
     printf("  ✓ ADC desinicializado\n");
+
+    hal_bateria_deinit();
+    printf("  ✓ Batería HAL desinicializado\n");
 
     // TODO: Desinicializar cuando estén disponibles
     // hal_gpio_deinit();
