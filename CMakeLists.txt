@@ -250,6 +250,7 @@ if(BUILD_TESTS)
 
     # Tests de Dominio
     add_unit_test(test_ambiente test/unit/test_ambiente.c)
+    add_unit_test(test_bateria test/unit/test_bateria.c)
 
     # Tests de Dispositivos (HAL)
     add_unit_test(test_hal_adc test/unit/test_hal_adc.c)
