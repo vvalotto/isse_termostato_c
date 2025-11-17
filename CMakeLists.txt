@@ -254,6 +254,7 @@ if(BUILD_TESTS)
 
     # Tests de Dispositivos (HAL)
     add_unit_test(test_hal_adc test/unit/test_hal_adc.c)
+    add_unit_test(test_hal_bateria test/unit/test_hal_bateria.c)
 
     # Tests de Infraestructura
     add_unit_test(test_sensor_temperatura test/unit/test_sensor_temperatura.c)
