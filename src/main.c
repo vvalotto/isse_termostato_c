@@ -31,9 +31,9 @@
 
 // Capa de Dominio
 #include "ambiente.h"
+#include "bateria.h"
 
 // TODO: Incluir cuando estén disponibles
-// #include "bateria.h"
 // #include "climatizador.h"
 
 // Capa de Infraestructura
@@ -143,9 +143,16 @@ int main(void) {
     }
     printf("  ✓ Entidad Ambiente creada (temp inicial: %.1f°C)\n", TEMP_INICIAL_DEFAULT);
 
-    // TODO: Crear entidad Batería con carga inicial
-    // Bateria* bateria = bateria_crear(100.0f);
-    // printf("  ✓ Entidad Batería creada (carga inicial: 100%%)\n");
+    // Crear entidad Batería con carga inicial
+    Bateria* bateria = bateria_crear();
+    if (bateria == NULL) {
+        fprintf(stderr, "[ERROR] Fallo al crear entidad Bateria\n");
+        ambiente_destruir(ambiente);
+        sensor_temperatura_deinit();
+        hal_adc_deinit();
+        return EXIT_FAILURE;
+    }
+    printf("  ✓ Entidad Bateria creada (nivel inicial: %u%%)\n", bateria_obtener_nivel(bateria));
 
     // TODO: Crear entidad Climatizador en estado apagado
     // Climatizador* climatizador = climatizador_crear();
@@ -159,9 +166,10 @@ int main(void) {
     printf("[ INIT ] Inicializando capa de aplicación...\n");
 
     // Crear gestor de termostato (orquestador principal)
-    GestorTermostato* gestor = gestor_termostato_crear(ambiente);
+    GestorTermostato* gestor = gestor_termostato_crear(ambiente, bateria);
     if (gestor == NULL) {
         fprintf(stderr, "[ERROR] Fallo al crear gestor de termostato\n");
+        bateria_destruir(bateria);
         ambiente_destruir(ambiente);
         sensor_temperatura_deinit();
         hal_adc_deinit();
@@ -228,8 +236,10 @@ int main(void) {
     ambiente_destruir(ambiente);
     printf("  ✓ Entidad Ambiente destruida\n");
 
+    bateria_destruir(bateria);
+    printf("  ✓ Entidad Bateria destruida\n");
+
     // TODO: Liberar cuando estén disponibles
-    // bateria_destruir(bateria);
     // climatizador_destruir(climatizador);
 
     // Desinicializar capa de infraestructura

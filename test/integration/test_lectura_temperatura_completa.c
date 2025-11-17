@@ -22,12 +22,16 @@
 #include "unity.h"
 #include "gestor_termostato.h"
 #include "ambiente.h"
+#include "bateria.h"
 #include "sensor_temperatura.h"
+#include "sensor_bateria.h"
 #include "hal_adc.h"
+#include "hal_bateria.h"
 #include <math.h>
 
 // Variables globales para el test
 static Ambiente* ambiente_global = NULL;
+static Bateria* bateria_global = NULL;
 static GestorTermostato* gestor_global = NULL;
 
 /**
@@ -36,10 +40,13 @@ static GestorTermostato* gestor_global = NULL;
 void setUp(void) {
     // Inicializar desde la capa más baja hacia arriba
     hal_adc_init();
+    hal_bateria_init();
     sensor_temperatura_init();
+    sensor_bateria_init();
 
     ambiente_global = ambiente_crear();
-    gestor_global = gestor_termostato_crear(ambiente_global);
+    bateria_global = bateria_crear();
+    gestor_global = gestor_termostato_crear(ambiente_global, bateria_global);
 }
 
 /**
@@ -57,8 +64,15 @@ void tearDown(void) {
         ambiente_global = NULL;
     }
 
+    if (bateria_global != NULL) {
+        bateria_destruir(bateria_global);
+        bateria_global = NULL;
+    }
+
     sensor_temperatura_deinit();
+    sensor_bateria_deinit();
     hal_adc_deinit();
+    hal_bateria_deinit();
 }
 
 /**
